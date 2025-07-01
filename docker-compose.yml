@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - SECRET_KEY=${SECRET_KEY}
+      - APP_URL=${APP_URL}
+      - CONFIG_URL=${CONFIG_URL}
+      - BASE_URL=${BASE_URL}
+      - SALEOR_API_URL=${SALEOR_API_URL}
+    volumes:
+      - ./:/app
+    depends_on:
+      - ngrok
+    restart: unless-stopped
+
+  ngrok:
+    image: ngrok/ngrok:latest
+    ports:
+      - "4040:4040"
+    environment:
+      - NGROK_AUTHTOKEN=${NGROK_AUTHTOKEN}
+    command: http app:8000 --domain=${NGROK_DOMAIN:-}
+    restart: unless-stopped

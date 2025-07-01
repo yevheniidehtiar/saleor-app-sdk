@@ -1,0 +1,2 @@
+Tests should use pytest, pytest-fixtures and utilize SQLite as DB for models.
+First unittests with fully mocked any third-party calls incl. graphql

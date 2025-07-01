@@ -1,0 +1,136 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "saleor-app-sdk"
+version = "0.1.0"
+description = "Python SDK for building Saleor apps with FastAPI and HTMX"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "Saleor Community", email = "hello@saleor.io"},
+]
+maintainers = [
+    {name = "Saleor Community", email = "hello@saleor.io"},
+]
+keywords = ["saleor", "ecommerce", "fastapi", "htmx", "graphql"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Internet :: WWW/HTTP :: WSGI :: Application",
+    "Framework :: FastAPI",
+]
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.110.0",
+    "uvicorn[standard]>=0.29.0",
+    "jinja2>=3.1.3",
+    "python-multipart>=0.0.9",
+    "httpx>=0.27.0",
+    "gql>=3.5.0",
+    "pydantic>=2.7.0",
+    "python-jose[cryptography]>=3.3.0",
+    "click>=8.1.7",
+    "cookiecutter>=2.5.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.5",
+    "pytest-cov>=4.1.0",
+    "mypy>=1.8.0",
+    "pre-commit>=3.6.0",
+    "ruff>=0.3.0"
+]
+docs = [
+    "mkdocs>=1.6.0",
+    "mkdocs-material>=9.5.9",
+    "mkdocstrings[python]>=0.24.0",
+]
+storage = [
+    "sqlalchemy>=2.0.28",
+    "alembic>=1.13.1",
+    "asyncpg>=0.30.0",  # PostgreSQL
+    "aiomysql>=0.2.0",   # MySQL
+    "aioredis>=2.0.1",   # Redis
+]
+
+[project.urls]
+Homepage = "https://github.com/saleor/saleor-app-sdk-python"
+Documentation = "https://saleor-app-sdk-python.readthedocs.io"
+Repository = "https://github.com/saleor/saleor-app-sdk-python"
+"Bug Tracker" = "https://github.com/saleor/saleor-app-sdk-python/issues"
+Changelog = "https://github.com/saleor/saleor-app-sdk-python/blob/main/CHANGELOG.md"
+
+[project.scripts]
+saleor-app = "saleor_app_sdk.cli:cli"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-dir]
+"" = "src"
+
+[tool.mypy]
+python_version = "3.13"
+check_untyped_defs = true
+ignore_missing_imports = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+warn_return_any = true
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+addopts = "-ra -q --strict-markers --strict-config"
+testpaths = ["tests"]
+pythonpath = ["src"]
+asyncio_mode = "auto"
+
+[tool.coverage.run]
+source = ["src"]
+branch = true
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+]
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+lint.select = ["E", "F", "I", "W", "N", "B", "C4", "UP", "S", "BLE", "A", "COM", "C90", "T10", "EM", "EXE", "ISC", "ICN", "G", "PIE", "T20", "PT", "Q", "RSE", "RET", "SLF", "SIM", "TID", "ARG", "PD", "PGH", "PL", "TRY", "NPY", "RUF"]
+lint.ignore = ["COM812"]
+exclude = [
+    ".eggs",
+    ".git",
+    ".hg",
+    ".mypy_cache",
+    ".tox",
+    ".venv",
+    "build",
+    "dist",
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"
+docstring-code-format = true
+
+[tool.ruff.lint.isort]
+known-first-party = ["saleor_app_sdk"]
+section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
