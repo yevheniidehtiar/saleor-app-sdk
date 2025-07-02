@@ -15,12 +15,15 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        fetch-depth: 2
+
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
         cache: 'pip'
-    
+
     - name: Install uv
       run: |
         pip install uv
@@ -32,14 +35,17 @@ jobs:
     - name: Install dependencies
       run: |
         uv pip install -e .[dev]
-    
+
     - name: Run tests with coverage
       run: |
+        source .venv/bin/activate
         pytest --cov=saleor_app_sdk --cov-report=xml --cov-report=term
-    
+
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v5
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        file: ./coverage.xml
+        files: ./coverage.xml
         fail_ci_if_error: true
+        verbose: true  # Add more detailed logging
+
