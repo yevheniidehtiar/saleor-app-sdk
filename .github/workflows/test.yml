@@ -14,7 +14,7 @@ jobs:
         python-version: ['3.11', '3.12']
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v4
       with:
@@ -24,7 +24,11 @@ jobs:
     - name: Install uv
       run: |
         pip install uv
-    
+
+    - name: Create venv
+      run: |
+        uv venv
+
     - name: Install dependencies
       run: |
         uv pip install -e .[dev]
@@ -34,7 +38,8 @@ jobs:
         pytest --cov=saleor_app_sdk --cov-report=xml --cov-report=term
     
     - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v3
+      uses: codecov/codecov-action@v5
       with:
+        token: ${{ secrets.CODECOV_TOKEN }}
         file: ./coverage.xml
         fail_ci_if_error: true
