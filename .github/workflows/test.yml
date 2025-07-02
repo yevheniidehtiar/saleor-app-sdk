@@ -39,13 +39,18 @@ jobs:
     - name: Run tests with coverage
       run: |
         source .venv/bin/activate
-        pytest --cov=saleor_app_sdk --cov-report=xml --cov-report=term
+        pytest --cov=saleor_app_sdk --junitxml=junit.xml
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v5
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        files: ./coverage.xml
-        fail_ci_if_error: true
+        slug: yevheniidehtiar/saleor-app-sdk
         verbose: true  # Add more detailed logging
+
+    - name: Upload test results to Codecov
+      if: ${{ !cancelled() }}
+      uses: codecov/test-results-action@v1
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
 
