@@ -10,17 +10,17 @@ install-dev:  ## Install package with development dependencies
 	uv pip install -e .[dev]
 
 test:  ## Run tests
-	pytest
+	pytest -vv
 
 test-coverage:  ## Run tests with coverage
 	pytest --cov=saleor_app_sdk --cov-report=html --cov-report=term
 
 lint:  ## Run linting
-	ruff check src tests
+	@ruff check src tests
 
 format:  ## Format code
-	ruff format src tests
-	ruff check --fix src tests
+	@ruff format src tests
+	@ruff check --fix --unsafe-fixes src tests
 
 type-check:  ## Run type checking
 	mypy src

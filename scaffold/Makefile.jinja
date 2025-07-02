@@ -1,0 +1,72 @@
+.PHONY: help install dev-install clean test lint format type-check run {% if include_docker %}docker-build docker-run docker-stop{% endif %}
+
+help: ## Show this help message
+	@echo "{{ app_display_name }} - Development Commands"
+	@echo ""
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
+
+install: ## Install the package
+	pip install -e .
+
+{% if include_tests %}
+dev-install: ## Install development dependencies
+	pip install -e ".[dev]"
+{% endif %}
+
+clean: ## Clean build artifacts
+	rm -rf build/
+	rm -rf dist/
+	rm -rf *.egg-info/
+	rm -rf .pytest_cache/
+	rm -rf .mypy_cache/
+	rm -rf htmlcov/
+	find . -type d -name __pycache__ -delete
+	find . -type f -name "*.pyc" -delete
+
+{% if include_tests %}
+test: ## Run tests
+	pytest
+
+test-cov: ## Run tests with coverage
+	pytest --cov=src --cov-report=html --cov-report=term
+
+test-watch: ## Run tests in watch mode
+	pytest --watch
+{% endif %}
+
+lint: ## Run linting
+	ruff check .
+
+format: ## Format code
+	ruff format .
+
+type-check: ## Run type checking
+	mypy src
+
+quality: lint type-check ## Run all quality checks
+
+run: ## Run the application
+	uvicorn src.{{ package_name }}.main:fastapi_app --reload --host 0.0.0.0 --port 8000
+
+{% if include_docker %}
+docker-build: ## Build Docker image
+	docker-compose build
+
+docker-run: ## Run with Docker Compose
+	docker-compose up
+
+docker-stop: ## Stop Docker containers
+	docker-compose down
+
+docker-logs: ## View Docker logs
+	docker-compose logs -f
+{% endif %}
+
+dev: ## Start development environment
+{% if include_docker %}
+	@echo "Starting development environment with Docker..."
+	make docker-run
+{% else %}
+	@echo "Starting development environment..."
+	make run
+{% endif %}

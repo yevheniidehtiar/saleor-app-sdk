@@ -1,0 +1,52 @@
+{% if success %}
+<div class="bg-green-50 border border-green-200 text-green-700 p-4 rounded-md">
+    <div class="flex items-start">
+        <div class="flex-shrink-0">
+            <!-- Success Icon -->
+            <svg class="h-5 w-5 text-green-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+            </svg>
+        </div>
+        <div class="ml-3">
+            <h3 class="text-sm font-medium">Product Created Successfully!</h3>
+            <div class="mt-2 text-sm">
+                <p>The product "{{ product.name }}" has been created with ID: {{ product.id }}</p>
+            </div>
+            <div class="mt-4">
+                <button hx-get="/api/products/{{ product.id }}"
+                        hx-target="#create-result"
+                        class="text-sm font-medium text-green-700 hover:text-green-600">
+                    View Product Details
+                </button>
+                <button onclick="document.getElementById('create-product-form').reset(); document.getElementById('create-result').innerHTML = '';"
+                        class="ml-3 text-sm font-medium text-gray-600 hover:text-gray-500">
+                    Create Another
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="bg-red-50 border border-red-200 text-red-700 p-4 rounded-md">
+    <div class="flex items-start">
+        <div class="flex-shrink-0">
+            <!-- Error Icon -->
+            <svg class="h-5 w-5 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+            </svg>
+        </div>
+        <div class="ml-3">
+            <h3 class="text-sm font-medium">Error Creating Product</h3>
+            <div class="mt-2 text-sm">
+                <p>{{ error }}</p>
+            </div>
+            <div class="mt-4">
+                <button onclick="document.getElementById('create-result').innerHTML = '';"
+                        class="text-sm font-medium text-red-700 hover:text-red-600">
+                    Try Again
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}

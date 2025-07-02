@@ -1,0 +1,115 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "{{ app_name }}"
+version = "{{ app_version }}"
+description = "{{ app_description }}"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "{{ author_name }}", email = "{{ author_email }}"},
+]
+maintainers = [
+    {name = "{{ author_name }}", email = "{{ author_email }}"},
+]
+keywords = ["saleor", "ecommerce", "fastapi", "app"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: {{ python_version }}",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Internet :: WWW/HTTP :: WSGI :: Application",
+    "Framework :: FastAPI",
+]
+requires-python = ">={{ python_version }}"
+dependencies = [
+    "saleor-app-sdk>=0.1.0",
+    "fastapi>=0.110.0",
+    "uvicorn[standard]>=0.29.0",
+]
+
+{% if include_tests %}
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.5",
+    "pytest-cov>=4.1.0",
+    "mypy>=1.8.0",
+    "pre-commit>=3.6.0",
+    "ruff>=0.3.0"
+]
+{% endif %}
+
+[project.urls]
+Homepage = "{{ app_url }}"
+Repository = "{{ app_url }}"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-dir]
+"" = "src"
+
+{% if include_tests %}
+[tool.mypy]
+python_version = "{{ python_version }}"
+check_untyped_defs = true
+ignore_missing_imports = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+warn_return_any = true
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+addopts = "-ra -q --strict-markers --strict-config"
+testpaths = ["tests"]
+pythonpath = ["src"]
+asyncio_mode = "auto"
+
+[tool.coverage.run]
+source = ["src"]
+branch = true
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+]
+{% endif %}
+
+[tool.ruff]
+line-length = 88
+target-version = "py{{ python_version.replace('.', '') }}"
+exclude = [
+    ".eggs",
+    ".git",
+    ".hg",
+    ".mypy_cache",
+    ".tox",
+    ".venv",
+    "build",
+    "dist",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W", "N", "B", "C4", "UP", "S", "BLE", "A", "COM", "C90", "T10", "EM", "EXE", "ISC", "ICN", "G", "PIE", "T20", "PT", "Q", "RSE", "RET", "SLF", "SIM", "TID", "ARG", "PD", "PGH", "PL", "TRY", "NPY", "RUF"]
+ignore = ["COM812"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "auto"
+docstring-code-format = true
+
+[tool.ruff.lint.isort]
+known-first-party = ["{{ package_name }}"]
+section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]

@@ -13,6 +13,16 @@ A Python SDK for building Saleor apps with FastAPI and HTMX.
 
 Saleor App SDK provides a streamlined way to build apps for the Saleor e-commerce platform using Python. It offers a set of tools and utilities to handle common tasks such as app installation, webhook processing, and GraphQL API communication.
 
+### Features
+
+- **FastAPI Integration**: Built on top of FastAPI for high performance and modern Python features
+- **HTMX Support**: Create interactive UIs without complex JavaScript frameworks
+- **GraphQL Client**: Easy communication with Saleor's GraphQL API
+- **Webhook Handling**: Process Saleor webhooks with ease
+- **Configuration UI**: Ready-to-use configuration page template
+- **Product Management**: Example implementation for product search and creation
+- **Playwright Tests**: End-to-end testing for your app's UI
+
 ## Installation
 
 ```bash
@@ -118,7 +128,35 @@ pip install -e ".[dev]"
 
 # Run tests
 pytest
+
+# Run Playwright UI tests
+pip install playwright
+playwright install
+pytest tests/playwright
 ```
+
+### UI Testing with Playwright
+
+The SDK includes Playwright tests for end-to-end UI testing. These tests verify that the app's UI and functionality work as expected.
+
+To run the Playwright tests:
+
+```bash
+# Install Playwright
+pip install playwright
+playwright install
+
+# Run all Playwright tests
+pytest tests/playwright
+
+# Run tests with browser visible
+pytest tests/playwright --headed
+
+# Run tests with slower execution for debugging
+pytest tests/playwright --headed --slowmo 500
+```
+
+For more information about the Playwright tests, see the [Playwright tests README](tests/playwright/README.md).
 
 ## License
 

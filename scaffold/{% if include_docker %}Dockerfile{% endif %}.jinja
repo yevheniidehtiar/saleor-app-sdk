@@ -1,0 +1,20 @@
+FROM python:{{ python_version }}-slim
+
+WORKDIR /app
+
+# Copy requirements files and source code needed for installation
+COPY pyproject.toml ./
+COPY src ./src
+
+# Install dependencies
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -e .
+
+# Copy the rest of the application code
+COPY . .
+
+# Expose the port the app runs on
+EXPOSE 8000
+
+# Command to run the application
+CMD ["uvicorn", "src.{{ package_name }}.main:fastapi_app", "--host", "0.0.0.0", "--port", "8000", "--reload"]

@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}Products - Saleor App{% endblock %}
+
+{% block content %}
+<div class="bg-white p-6 rounded-lg shadow-md">
+    <h2 class="text-2xl font-bold mb-6">Product Management</h2>
+    
+    <!-- Search Form with HTMX -->
+    <div class="mb-8">
+        <h3 class="text-xl font-semibold mb-4">Search Products</h3>
+        <form hx-get="/api/products/search" 
+              hx-trigger="submit" 
+              hx-target="#search-results" 
+              hx-indicator="#search-indicator"
+              class="flex flex-col md:flex-row gap-4">
+            <input type="text" 
+                   name="query" 
+                   placeholder="Search by name..." 
+                   class="flex-grow p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500">
+            <button type="submit" 
+                    class="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 transition">
+                Search
+            </button>
+        </form>
+        <div id="search-indicator" class="htmx-indicator mt-4 text-gray-600">
+            Searching...
+        </div>
+        <div id="search-results" class="mt-4">
+            <!-- Search results will be loaded here -->
+        </div>
+    </div>
+    
+    <!-- Create Product Form with HTMX -->
+    <div>
+        <h3 class="text-xl font-semibold mb-4">Create New Product</h3>
+        <form hx-post="/api/products/create" 
+              hx-trigger="submit" 
+              hx-target="#create-result" 
+              hx-indicator="#create-indicator"
+              class="space-y-4">
+            <div>
+                <label for="name" class="block text-sm font-medium text-gray-700">Product Name</label>
+                <input type="text" 
+                       id="name" 
+                       name="name" 
+                       required 
+                       class="mt-1 block w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500">
+            </div>
+            <div>
+                <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+                <textarea id="description" 
+                          name="description" 
+                          rows="3" 
+                          class="mt-1 block w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"></textarea>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label for="price" class="block text-sm font-medium text-gray-700">Price</label>
+                    <input type="number" 
+                           id="price" 
+                           name="price" 
+                           step="0.01" 
+                           required 
+                           class="mt-1 block w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500">
+                </div>
+                <div>
+                    <label for="currency" class="block text-sm font-medium text-gray-700">Currency</label>
+                    <select id="currency" 
+                            name="currency" 
+                            required 
+                            class="mt-1 block w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500">
+                        <option value="USD">USD</option>
+                        <option value="EUR">EUR</option>
+                        <option value="GBP">GBP</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <button type="submit" 
+                        class="w-full bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 transition">
+                    Create Product
+                </button>
+            </div>
+        </form>
+        <div id="create-indicator" class="htmx-indicator mt-4 text-gray-600">
+            Creating product...
+        </div>
+        <div id="create-result" class="mt-4">
+            <!-- Create result will be loaded here -->
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,75 @@
+"""{{ app_display_name }} - Main application module."""
+
+from saleor_app_sdk import (
+    SaleorApp, SaleorAppBuilder, SaleorPermission,
+    WebhookEventType
+)
+
+# Parse permissions from the configuration
+{% set permissions_list = saleor_permissions.split(',') %}
+permissions = [
+{% for permission in permissions_list %}
+    SaleorPermission.{{ permission.strip() }},
+{% endfor %}
+]
+
+# Create your Saleor app
+app = (SaleorAppBuilder("{{ app_name }}", "{{ app_display_name }}")
+       .version("{{ app_version }}")
+       .about("{{ app_description }}")
+       .permissions(*permissions)
+       .urls(
+           app_url="{{ app_url }}/app",
+           config_url="{{ app_url }}/config"
+       )
+       .secret_key("your-secret-key")  # Change this in production!
+       .base_url("{{ app_url }}")
+       .build())
+
+# Access the FastAPI app
+fastapi_app = app.fastapi_app
+
+
+@app.get("/")
+async def index():
+    """Root endpoint returning basic app information."""
+    return {
+        "message": "Welcome to {{ app_display_name }}!",
+        "app_name": "{{ app_name }}",
+        "version": "{{ app_version }}",
+        "description": "{{ app_description }}"
+    }
+
+
+@app.get("/health")
+async def health_check():
+    """Health check endpoint."""
+    return {"status": "healthy", "app": "{{ app_name }}"}
+
+
+# Example webhook handler (uncomment and modify as needed)
+# @app.webhook(WebhookEventType.ORDER_CREATED)
+# async def handle_order_created(payload: dict, headers: dict):
+#     """Handle order created webhook."""
+#     print(f"Order created: {payload}")
+#     return {"status": "processed"}
+
+
+# Example configuration endpoint
+@app.get("/config")
+async def config():
+    """App configuration endpoint."""
+    return {
+        "app_name": "{{ app_display_name }}",
+        "version": "{{ app_version }}",
+        "permissions": [
+{% for permission in permissions_list %}
+            "{{ permission.strip() }}",
+{% endfor %}
+        ]
+    }
+
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("main:fastapi_app", host="0.0.0.0", port=8000, reload=True)

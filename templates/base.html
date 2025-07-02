@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Saleor App{% endblock %}</title>
+    <!-- HTMX for interactive UI without complex frontend builds -->
+    <script src="https://unpkg.com/htmx.org@1.9.6"></script>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    {% block head %}{% endblock %}
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <header class="bg-white shadow-md p-4 mb-6">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-purple-700">Saleor App</h1>
+            <nav>
+                <ul class="flex space-x-4">
+                    <li><a href="/" class="text-gray-600 hover:text-purple-700">Home</a></li>
+                    <li><a href="/products" class="text-gray-600 hover:text-purple-700">Products</a></li>
+                    <li><a href="/config" class="text-gray-600 hover:text-purple-700">Config</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-6">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="bg-white shadow-md p-4 mt-6">
+        <div class="container mx-auto text-center text-gray-600">
+            <p>Powered by Saleor App SDK</p>
+        </div>
+    </footer>
+</body>
+</html>
