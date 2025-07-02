@@ -1,5 +1,12 @@
 # Saleor App SDK for Python
 
+<a href="https://github.com/yevhenii./saleor-app-sdk-py/actions?query=workflow%3ATest+event%3Apush+branch%3Amaster" target="_blank">
+    <img src="https://github.com/saleor/saleor-app-sdk-py/actions/workflows/test.yml/badge.svg?event=push&branch=master" alt="Test">
+</a>
+<a href="https://codecov.io/gh/saleor/saleor-app-sdk-py" target="_blank">
+    <img src="https://codecov.io/gh/saleor/saleor-app-sdk-py/branch/master/graph/badge.svg" alt="Coverage">
+</a>
+
 A Python SDK for building Saleor apps with FastAPI and HTMX.
 
 ## Overview
@@ -62,7 +69,7 @@ async def index():
 async def handle_order_created(payload, installation):
     order_id = payload["order"]["id"]
     print(f"New order created: {order_id}")
-    
+
     # Use GraphQL client to interact with Saleor API
     client = app.get_graphql_client(installation.domain)
     # ... process the order

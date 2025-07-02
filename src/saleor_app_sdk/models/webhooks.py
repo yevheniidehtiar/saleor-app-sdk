@@ -4,7 +4,7 @@ Webhook-related models for Saleor App SDK
 
 from dataclasses import dataclass
 
-from ..webhooks.events import WebhookEventType
+from saleor_app_sdk.webhooks.events import WebhookEventType
 
 
 @dataclass

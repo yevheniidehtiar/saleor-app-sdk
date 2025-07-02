@@ -1,5 +1,4 @@
 import pytest
-from unittest.mock import patch
 
 from saleor_app_sdk.app.builder import SaleorAppBuilder
 from saleor_app_sdk.app.core import SaleorApp
@@ -11,7 +10,7 @@ class TestSaleorAppBuilder:
     def test_init(self, app_id, app_name):
         """Test initialization of SaleorAppBuilder"""
         builder = SaleorAppBuilder(app_id=app_id, name=app_name)
-        
+
         assert builder._manifest.id == app_id
         assert builder._manifest.name == app_name
         assert builder._manifest.version == "1.0.0"
@@ -25,14 +24,14 @@ class TestSaleorAppBuilder:
     def test_version(self, app_builder, app_version):
         """Test setting app version"""
         builder = app_builder.version(app_version)
-        
+
         assert builder._manifest.version == app_version
         assert builder is app_builder  # Test method chaining
 
     def test_about(self, app_builder, app_about):
         """Test setting app description"""
         builder = app_builder.about(app_about)
-        
+
         assert builder._manifest.about == app_about
         assert builder is app_builder  # Test method chaining
 
@@ -40,7 +39,7 @@ class TestSaleorAppBuilder:
         """Test setting app permissions"""
         permissions = [SaleorPermission.MANAGE_ORDERS, SaleorPermission.MANAGE_PRODUCTS]
         builder = app_builder.permissions(*permissions)
-        
+
         assert builder._manifest.permissions == permissions
         assert builder is app_builder  # Test method chaining
 
@@ -49,15 +48,15 @@ class TestSaleorAppBuilder:
         privacy_url = "https://example.com/privacy"
         homepage_url = "https://example.com"
         support_url = "https://example.com/support"
-        
+
         builder = app_builder.urls(
             app_url=app_url,
             config_url=config_url,
             privacy_url=privacy_url,
             homepage_url=homepage_url,
-            support_url=support_url
+            support_url=support_url,
         )
-        
+
         assert builder._manifest.app_url == app_url
         assert builder._manifest.configuration_url == config_url
         assert builder._manifest.data_privacy_url == privacy_url
@@ -65,15 +64,22 @@ class TestSaleorAppBuilder:
         assert builder._manifest.support_url == support_url
         assert builder is app_builder  # Test method chaining
 
-    def test_webhook(self, app_builder, webhook_name, webhook_events, webhook_query, webhook_target_url):
+    def test_webhook(
+        self,
+        app_builder,
+        webhook_name,
+        webhook_events,
+        webhook_query,
+        webhook_target_url,
+    ):
         """Test adding a webhook"""
         builder = app_builder.webhook(
             name=webhook_name,
             events=webhook_events,
             query=webhook_query,
-            target_url=webhook_target_url
+            target_url=webhook_target_url,
         )
-        
+
         assert len(builder._manifest.webhooks) == 1
         webhook = builder._manifest.webhooks[0]
         assert webhook.name == webhook_name
@@ -83,36 +89,43 @@ class TestSaleorAppBuilder:
         assert webhook.is_active is True
         assert builder is app_builder  # Test method chaining
 
-    def test_multiple_webhooks(self, app_builder, webhook_name, webhook_events, webhook_query, webhook_target_url):
+    def test_multiple_webhooks(
+        self,
+        app_builder,
+        webhook_name,
+        webhook_events,
+        webhook_query,
+        webhook_target_url,
+    ):
         """Test adding multiple webhooks"""
         # Add first webhook
         app_builder.webhook(
             name=webhook_name,
             events=webhook_events,
             query=webhook_query,
-            target_url=webhook_target_url
+            target_url=webhook_target_url,
         )
-        
+
         # Add second webhook
         second_webhook_name = "Second Webhook"
         second_webhook_events = [WebhookEventType.PRODUCT_CREATED]
         second_webhook_query = "query { product { id } }"
         second_webhook_target_url = "https://example.com/webhooks/product"
-        
+
         app_builder.webhook(
             name=second_webhook_name,
             events=second_webhook_events,
             query=second_webhook_query,
-            target_url=second_webhook_target_url
+            target_url=second_webhook_target_url,
         )
-        
+
         assert len(app_builder._manifest.webhooks) == 2
-        
+
         # Check first webhook
         webhook1 = app_builder._manifest.webhooks[0]
         assert webhook1.name == webhook_name
         assert webhook1.events == webhook_events
-        
+
         # Check second webhook
         webhook2 = app_builder._manifest.webhooks[1]
         assert webhook2.name == second_webhook_name
@@ -121,14 +134,14 @@ class TestSaleorAppBuilder:
     def test_secret_key(self, app_builder, secret_key):
         """Test setting secret key"""
         builder = app_builder.secret_key(secret_key)
-        
+
         assert builder._secret_key == secret_key
         assert builder is app_builder  # Test method chaining
 
     def test_base_url(self, app_builder, base_url):
         """Test setting base URL"""
         builder = app_builder.base_url(base_url)
-        
+
         assert builder._base_url == base_url
         assert builder is app_builder  # Test method chaining
 
@@ -141,7 +154,7 @@ class TestSaleorAppBuilder:
         """Test successful app building"""
         app_builder.secret_key(secret_key).base_url(base_url)
         app = app_builder.build()
-        
+
         assert isinstance(app, SaleorApp)
         assert app.manifest == app_builder._manifest
         assert app.secret_key == secret_key

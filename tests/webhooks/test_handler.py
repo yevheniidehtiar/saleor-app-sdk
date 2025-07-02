@@ -1,13 +1,12 @@
-import pytest
-import json
-import hmac
 import hashlib
-from unittest.mock import AsyncMock, MagicMock, patch
+import hmac
+from unittest.mock import AsyncMock, MagicMock
 
-from fastapi import HTTPException, Request
+import pytest
+from fastapi import HTTPException
 
-from saleor_app_sdk.webhooks.handler import WebhookHandler
 from saleor_app_sdk.webhooks.events import WebhookEventType
+from saleor_app_sdk.webhooks.handler import WebhookHandler
 
 
 class TestWebhookHandler:
@@ -37,9 +36,13 @@ class TestWebhookHandler:
 
         assert webhook_handler._handlers[event_type] == handler_func
 
-    def test_verify_signature_valid(self, webhook_handler, webhook_payload_bytes, webhook_signature):
+    def test_verify_signature_valid(
+        self, webhook_handler, webhook_payload_bytes, webhook_signature
+    ):
         """Test verifying a valid webhook signature"""
-        is_valid = webhook_handler.verify_signature(webhook_payload_bytes, webhook_signature)
+        is_valid = webhook_handler.verify_signature(
+            webhook_payload_bytes, webhook_signature
+        )
 
         assert is_valid is True
 
@@ -47,7 +50,9 @@ class TestWebhookHandler:
         """Test verifying an invalid webhook signature"""
         invalid_signature = "invalid-signature"
 
-        is_valid = webhook_handler.verify_signature(webhook_payload_bytes, invalid_signature)
+        is_valid = webhook_handler.verify_signature(
+            webhook_payload_bytes, invalid_signature
+        )
 
         assert is_valid is False
 
@@ -66,14 +71,16 @@ class TestWebhookHandler:
         assert excinfo.value.detail == "Invalid signature"
 
     @pytest.mark.asyncio
-    async def test_process_webhook_no_handler(self, webhook_handler, webhook_payload_bytes, webhook_signature):
+    async def test_process_webhook_no_handler(
+        self, webhook_handler, webhook_payload_bytes, webhook_signature
+    ):
         """Test processing a webhook with no registered handler"""
         # Create a mock request with valid signature but no handler
         mock_request = MagicMock()
         mock_request.body = AsyncMock(return_value=webhook_payload_bytes)
         mock_request.headers = {
             "saleor-signature": webhook_signature,
-            "saleor-event": WebhookEventType.ORDER_CREATED.value
+            "saleor-event": WebhookEventType.ORDER_CREATED.value,
         }
 
         # No handler registered for ORDER_CREATED
@@ -84,7 +91,9 @@ class TestWebhookHandler:
         assert response == {"received": True}
 
     @pytest.mark.asyncio
-    async def test_process_webhook_sync_handler(self, webhook_handler, webhook_payload_bytes, webhook_signature, webhook_payload):
+    async def test_process_webhook_sync_handler(
+        self, webhook_handler, webhook_payload_bytes, webhook_signature, webhook_payload
+    ):
         """Test processing a webhook with a synchronous handler"""
         event_type = WebhookEventType.ORDER_CREATED
 
@@ -97,7 +106,7 @@ class TestWebhookHandler:
         mock_request.body = AsyncMock(return_value=webhook_payload_bytes)
         mock_request.headers = {
             "saleor-signature": webhook_signature,
-            "saleor-event": event_type.value
+            "saleor-event": event_type.value,
         }
 
         response = await webhook_handler.process_webhook(mock_request)
@@ -107,7 +116,9 @@ class TestWebhookHandler:
         assert response == {"received": True}
 
     @pytest.mark.asyncio
-    async def test_process_webhook_async_handler(self, webhook_handler, webhook_payload_bytes, webhook_signature, webhook_payload):
+    async def test_process_webhook_async_handler(
+        self, webhook_handler, webhook_payload_bytes, webhook_signature, webhook_payload
+    ):
         """Test processing a webhook with an asynchronous handler"""
         event_type = WebhookEventType.ORDER_CREATED
 
@@ -120,7 +131,7 @@ class TestWebhookHandler:
         mock_request.body = AsyncMock(return_value=webhook_payload_bytes)
         mock_request.headers = {
             "saleor-signature": webhook_signature,
-            "saleor-event": event_type.value
+            "saleor-event": event_type.value,
         }
 
         response = await webhook_handler.process_webhook(mock_request)
@@ -145,7 +156,7 @@ class TestWebhookHandler:
         mock_request.body = AsyncMock(return_value=invalid_payload)
         mock_request.headers = {
             "saleor-signature": signature,
-            "saleor-event": WebhookEventType.ORDER_CREATED.value
+            "saleor-event": WebhookEventType.ORDER_CREATED.value,
         }
 
         with pytest.raises(HTTPException) as excinfo:
@@ -156,7 +167,9 @@ class TestWebhookHandler:
         assert "Expecting" in excinfo.value.detail or "Invalid" in excinfo.value.detail
 
     @pytest.mark.asyncio
-    async def test_process_webhook_invalid_event_type(self, webhook_handler, webhook_payload_bytes, secret_key):
+    async def test_process_webhook_invalid_event_type(
+        self, webhook_handler, webhook_payload_bytes, secret_key
+    ):
         """Test processing a webhook with an invalid event type"""
         # Calculate signature for the payload
         signature = hmac.new(
@@ -168,7 +181,7 @@ class TestWebhookHandler:
         mock_request.body = AsyncMock(return_value=webhook_payload_bytes)
         mock_request.headers = {
             "saleor-signature": signature,
-            "saleor-event": "INVALID_EVENT_TYPE"
+            "saleor-event": "INVALID_EVENT_TYPE",
         }
 
         with pytest.raises(HTTPException) as excinfo:
@@ -178,13 +191,16 @@ class TestWebhookHandler:
         assert "is not a valid WebhookEventType" in excinfo.value.detail
 
     @pytest.mark.asyncio
-    async def test_process_webhook_handler_exception(self, webhook_handler, webhook_payload_bytes, webhook_signature, webhook_payload):
+    async def test_process_webhook_handler_exception(
+        self, webhook_handler, webhook_payload_bytes, webhook_signature, webhook_payload
+    ):
         """Test processing a webhook where the handler raises an exception"""
         event_type = WebhookEventType.ORDER_CREATED
 
         # Register a handler that raises an exception
         def handler_with_exception(data):
-            raise ValueError("Handler error")
+            error_msg = "Handler error"
+            raise ValueError(error_msg)
 
         webhook_handler.register_handler(event_type, handler_with_exception)
 
@@ -193,7 +209,7 @@ class TestWebhookHandler:
         mock_request.body = AsyncMock(return_value=webhook_payload_bytes)
         mock_request.headers = {
             "saleor-signature": webhook_signature,
-            "saleor-event": event_type.value
+            "saleor-event": event_type.value,
         }
 
         with pytest.raises(HTTPException) as excinfo:

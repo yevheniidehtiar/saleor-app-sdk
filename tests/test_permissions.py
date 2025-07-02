@@ -1,5 +1,6 @@
-import pytest
 from enum import Enum
+
+import pytest
 
 from saleor_app_sdk.permissions import SaleorPermission
 

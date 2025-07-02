@@ -4,7 +4,8 @@ App manifest model for Saleor App SDK
 
 from dataclasses import dataclass
 
-from ..permissions import SaleorPermission
+from saleor_app_sdk.permissions import SaleorPermission
+
 from .webhooks import WebhookDefinition
 
 

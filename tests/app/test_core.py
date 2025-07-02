@@ -1,8 +1,5 @@
-import json
-import pytest
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import patch
 
-from fastapi import Request
 from fastapi.testclient import TestClient
 
 from saleor_app_sdk.app.core import SaleorApp
@@ -51,8 +48,11 @@ class TestSaleorApp:
         assert response.status_code == 200
         assert response.json() == {"success": True}
 
-    def test_register_installation_with_custom_handler(self, app_manifest, secret_key, base_url):
+    def test_register_installation_with_custom_handler(
+        self, app_manifest, secret_key, base_url
+    ):
         """Test registration with custom on_install handler"""
+
         # Create a custom app class with an on_install handler
         class CustomApp(SaleorApp):
             async def on_install(self, installation: AppInstallation):
@@ -96,7 +96,9 @@ class TestSaleorApp:
         assert manifest_dict["name"] == app_manifest.name
         assert manifest_dict["version"] == app_manifest.version
         assert manifest_dict["about"] == app_manifest.about
-        assert manifest_dict["permissions"] == [p.value for p in app_manifest.permissions]
+        assert manifest_dict["permissions"] == [
+            p.value for p in app_manifest.permissions
+        ]
         assert manifest_dict["appUrl"] == app_manifest.app_url
         assert manifest_dict["tokenTargetUrl"] == f"{base_url}/api/register"
         assert manifest_dict["webhooks"] == []
@@ -116,7 +118,9 @@ class TestSaleorApp:
         assert manifest_dict["homepageUrl"] == app_manifest.homepage_url
         assert manifest_dict["supportUrl"] == app_manifest.support_url
 
-    def test_serialize_manifest_with_webhooks(self, app_manifest, secret_key, base_url, webhook_definition):
+    def test_serialize_manifest_with_webhooks(
+        self, app_manifest, secret_key, base_url, webhook_definition
+    ):
         """Test serialization of app manifest with webhooks"""
         app_manifest.webhooks = [webhook_definition]
 
@@ -162,6 +166,7 @@ class TestSaleorApp:
     def test_route_decorator(self, saleor_app):
         """Test route decorator"""
         with patch.object(saleor_app.fastapi_app, "route") as mock_route:
+
             @saleor_app.route("/test", methods=["GET"])
             def test_route():
                 return {"message": "test"}
@@ -171,6 +176,7 @@ class TestSaleorApp:
     def test_get_decorator(self, saleor_app):
         """Test get decorator"""
         with patch.object(saleor_app.fastapi_app, "get") as mock_get:
+
             @saleor_app.get("/test")
             def test_route():
                 return {"message": "test"}
@@ -180,6 +186,7 @@ class TestSaleorApp:
     def test_post_decorator(self, saleor_app):
         """Test post decorator"""
         with patch.object(saleor_app.fastapi_app, "post") as mock_post:
+
             @saleor_app.post("/test")
             def test_route():
                 return {"message": "test"}
@@ -189,6 +196,7 @@ class TestSaleorApp:
     def test_webhook_decorator(self, saleor_app):
         """Test webhook decorator"""
         with patch.object(saleor_app.webhook_handler, "on") as mock_on:
+
             @saleor_app.webhook(WebhookEventType.ORDER_CREATED)
             def test_webhook(data):
                 return data
@@ -200,6 +208,7 @@ class TestSaleorApp:
         # The default implementation should do nothing
         # We just verify it can be called without errors
         import asyncio
+
         asyncio.run(saleor_app.on_install(app_installation))
 
     def test_on_uninstall_hook(self, saleor_app, app_installation):
@@ -207,4 +216,5 @@ class TestSaleorApp:
         # The default implementation should do nothing
         # We just verify it can be called without errors
         import asyncio
+
         asyncio.run(saleor_app.on_uninstall(app_installation))

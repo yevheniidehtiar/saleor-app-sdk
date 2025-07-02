@@ -112,8 +112,6 @@ exclude_lines = [
 [tool.ruff]
 line-length = 88
 target-version = "py311"
-lint.select = ["E", "F", "I", "W", "N", "B", "C4", "UP", "S", "BLE", "A", "COM", "C90", "T10", "EM", "EXE", "ISC", "ICN", "G", "PIE", "T20", "PT", "Q", "RSE", "RET", "SLF", "SIM", "TID", "ARG", "PD", "PGH", "PL", "TRY", "NPY", "RUF"]
-lint.ignore = ["COM812"]
 exclude = [
     ".eggs",
     ".git",
@@ -123,6 +121,176 @@ exclude = [
     ".venv",
     "build",
     "dist",
+]
+
+# Full linting for source code
+[tool.ruff.lint]
+select = ["E", "F", "I", "W", "N", "B", "C4", "UP", "S", "BLE", "A", "COM", "C90", "T10", "EM", "EXE", "ISC", "ICN", "G", "PIE", "T20", "PT", "Q", "RSE", "RET", "SLF", "SIM", "TID", "ARG", "PD", "PGH", "PL", "TRY", "NPY", "RUF"]
+ignore = ["COM812"]
+
+# Minimal style-only linting for tests
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = [
+    "S101",  # Allow assert usage in tests
+    "S102",  # Allow exec usage in tests
+    "S103",  # Allow setting bad file permissions
+    "S104",  # Allow binding to all interfaces
+    "S105",  # Allow hardcoded password strings
+    "S106",  # Allow hardcoded password variables
+    "S107",  # Allow hardcoded password default args
+    "S108",  # Allow insecure temp file/directory
+    "S110",  # Allow try-except-pass
+    "S112",  # Allow try-except-continue
+    "S301",  # Allow pickle usage
+    "S302",  # Allow marshal usage
+    "S303",  # Allow eval usage
+    "S304",  # Allow xml usage
+    "S305",  # Allow xml usage
+    "S306",  # Allow mktemp usage
+    "S307",  # Allow eval usage
+    "S308",  # Allow mark_safe usage
+    "S310",  # Allow url open
+    "S311",  # Allow random
+    "S312",  # Allow telnetlib
+    "S313",  # Allow xml usage
+    "S314",  # Allow xml usage
+    "S315",  # Allow xml usage
+    "S316",  # Allow xml usage
+    "S317",  # Allow xml usage
+    "S318",  # Allow xml usage
+    "S319",  # Allow xml usage
+    "S320",  # Allow xml usage
+    "S321",  # Allow xml usage
+    "S324",  # Allow xml usage
+    "S501",  # Allow requests without cert verification
+    "S506",  # Allow unsafe yaml load
+    "S508",  # Allow snmp without crypto
+    "S509",  # Allow snmp without auth
+    "S601",  # Allow shell commands
+    "S602",  # Allow shell commands
+    "S603",  # Allow shell commands
+    "S604",  # Allow shell commands
+    "S605",  # Allow shell commands
+    "S606",  # Allow shell commands
+    "S607",  # Allow shell commands
+    "S608",  # Allow shell commands
+    "S609",  # Allow shell commands
+    "TID252",  # Allow relative imports in tests
+    "ARG001",  # Allow unused function arguments
+    "ARG002",  # Allow unused method arguments
+    "ARG003",  # Allow unused class method arguments
+    "ARG004",  # Allow unused static method arguments
+    "ARG005",  # Allow unused lambda arguments
+    "B006",   # Allow mutable default args
+    "B007",   # Allow unused loop control variable
+    "B008",   # Allow function calls in argument defaults
+    "B015",   # Allow comprehensions with all/any
+    "B018",   # Allow useless expressions
+    "B904",   # Allow raising exceptions without from
+    "N801",   # Allow invalid class names
+    "N802",   # Allow invalid function names
+    "N803",   # Allow invalid argument names
+    "N804",   # Allow invalid first argument names
+    "N805",   # Allow invalid first argument names
+    "N806",   # Allow invalid variable names
+    "N807",   # Allow invalid dunder method names
+    "N815",   # Allow mixedCase variable names
+    "N816",   # Allow mixedCase imports
+    "N817",   # Allow camelcase imports
+    "N818",   # Allow error suffix on exception names
+    "PGH001",  # Allow no-eval usage
+    "PGH002",  # Allow no-eval usage
+    "PGH003",  # Allow no-eval usage
+    "PD010",   # Allow pandas-df-is-copy
+    "PD011",   # Allow pandas-df-is-copy
+    "PD901",   # Allow pandas-df-variable-name
+    "PT001",   # Allow pytest-fixture-incorrect-parentheses
+    "PT002",   # Allow pytest-fixture-incorrect-parentheses
+    "PT003",   # Allow pytest-extraneous-skip-decorator
+    "PT004",   # Allow pytest-missing-fixture-name-underscore
+    "PT005",   # Allow pytest-incorrect-fixture-name-underscore
+    "PT006",   # Allow pytest-parametrize-names-wrong-type
+    "PT007",   # Allow pytest-parametrize-values-wrong-type
+    "PT008",   # Allow pytest-patch-with-lambda
+    "PT009",   # Allow pytest-unittest-assertion
+    "PT010",   # Allow pytest-raise-without-match
+    "PT011",   # Allow pytest-raises-too-broad
+    "PT012",   # Allow pytest-raises-with-multiple-statements
+    "PT013",   # Allow pytest-incorrect-pytest-import
+    "PT014",   # Allow pytest-duplicate-parametrize-test-cases
+    "PT015",   # Allow pytest-assert-always-false
+    "PT016",   # Allow pytest-incorrect-mark-parentheses
+    "PT017",   # Allow pytest-asserting-on-exception
+    "PT018",   # Allow pytest-composite-assertion
+    "PT019",   # Allow pytest-fixture-param-without-value
+    "PT020",   # Allow pytest-useless-yield-fixture
+    "PT021",   # Allow pytest-xpass
+    "PT022",   # Allow pytest-usefixtures-wrong-position
+    "PT023",   # Allow pytest-incorrect-mark-indentation
+    "PT024",   # Allow pytest-assert-in-except
+    "PT025",   # Allow pytest-assert-in-finally
+    "PT026",   # Allow pytest-use-implicit-none
+    "PT027",   # Allow pytest-unittest-raises
+    "RET501",  # Allow unnecessary-return-none
+    "RET502",  # Allow implicit-return-value
+    "RET503",  # Allow implicit-return
+    "RET504",  # Allow unnecessary-assign
+    "RET505",  # Allow superfluous-else-return
+    "RET506",  # Allow superfluous-else-raise
+    "RET507",  # Allow superfluous-else-continue
+    "RET508",  # Allow superfluous-else-break
+    "SIM101",  # Allow multiple-with-statements
+    "SIM102",  # Allow nested-if-statements
+    "SIM103",  # Allow return-in-try-except-finally
+    "SIM105",  # Allow use-contextlib-suppress
+    "SIM107",  # Allow return-in-try-except
+    "SIM108",  # Allow if-else-block-instead-of-dict-get
+    "SIM109",  # Allow if-else-block-instead-of-if-exp
+    "SIM110",  # Allow convert-to-dict-items
+    "SIM111",  # Allow convert-to-dict-keys
+    "SIM112",  # Allow convert-to-dict-values
+    "SIM114",  # Allow if-else-block-instead-of-dict-get-with-default
+    "SIM115",  # Allow open-file-with-context-handler
+    "SIM116",  # Allow if-else-block-instead-of-dict-get
+    "SIM117",  # Allow multiple-with-statements
+    "SIM118",  # Allow key-in-dict-and-dict-get
+    "SIM201",  # Allow extract-nested-ternary
+    "SIM202",  # Allow extract-comparison
+    "SIM300",  # Allow yoda-conditions
+    "PLC0415",
+    "A004",
+    "SLF001",  # Allow private-member-access
+    "PLR0402", # Allow consider-using-from-import
+    "PLR0911", # Allow too-many-return-statements
+    "PLR0912", # Allow too-many-branches
+    "PLR0913", # Allow too-many-arguments
+    "PLR0915", # Allow too-many-statements
+    "PLR1701", # Allow consider-using-with
+    "PLR1711", # Allow useless-return
+    "PLR1714", # Allow consider-using-in
+    "PLR1722", # Allow use-sys-exit
+    "PLR2004", # Allow magic-value-comparison
+    "PLW0120", # Allow useless-else-on-loop
+    "PLW0602", # Allow global-variable-not-assigned
+    "PLW0603", # Allow global-statement
+    "PLW0604", # Allow global-at-module-level
+    "PLW0711", # Allow binary-op-exception
+    "PLW1508", # Allow invalid-envvar-default
+    "PLW1509", # Allow subprocess-popen-preexec-fn
+    "PLW1510", # Allow subprocess-run-check
+    "PLW1514", # Allow subprocess-without-shell-equals-true
+    "PLW1641", # Allow eq-without-hash
+    "PLW2901", # Allow redefined-loop-name
+    "TRY002",  # Allow raise-vanilla-args
+    "TRY003",  # Allow raise-vanilla-class
+    "TRY004",  # Allow try-except-in-loop
+    "TRY200",  # Allow reraise-no-cause
+    "TRY201",  # Allow reraise-no-cause
+    "TRY300",  # Allow try-except-pass
+    "TRY301",  # Allow raise-within-try
+    "TRY400",  # Allow error-instead-of-exception
+    "TRY401",  # Allow error-instead-of-exception
+    "BLE001",  # Allow blind-except
 ]
 
 [tool.ruff.format]

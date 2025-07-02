@@ -1,10 +1,8 @@
-import pytest
-from datetime import datetime
-from unittest.mock import AsyncMock, MagicMock, patch
+from datetime import datetime, UTC
+from unittest.mock import MagicMock, patch
 
-from fastapi import FastAPI
+import pytest
 from fastapi.testclient import TestClient
-from httpx import Response
 
 from saleor_app_sdk.app.builder import SaleorAppBuilder
 from saleor_app_sdk.app.core import SaleorApp
@@ -14,7 +12,6 @@ from saleor_app_sdk.models.webhooks import WebhookDefinition
 from saleor_app_sdk.permissions import SaleorPermission
 from saleor_app_sdk.webhooks.events import WebhookEventType
 from saleor_app_sdk.webhooks.handler import WebhookHandler
-from saleor_app_sdk.graphql.client import SaleorGraphQLClient
 
 
 @pytest.fixture
@@ -147,7 +144,7 @@ def app_installation(domain, auth_token, saleor_api_url):
         auth_token=auth_token,
         domain=domain,
         saleor_api_url=saleor_api_url,
-        installed_at=datetime.utcnow(),
+        installed_at=datetime.now(UTC),
     )
 
 
@@ -185,13 +182,15 @@ def webhook_payload():
 @pytest.fixture
 def webhook_payload_bytes(webhook_payload):
     import json
+
     return json.dumps(webhook_payload).encode()
 
 
 @pytest.fixture
 def webhook_signature(webhook_payload_bytes, secret_key):
-    import hmac
     import hashlib
+    import hmac
+
     return hmac.new(
         secret_key.encode(), webhook_payload_bytes, hashlib.sha256
     ).hexdigest()

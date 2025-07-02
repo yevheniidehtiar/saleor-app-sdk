@@ -2,7 +2,7 @@
 App installation model for Saleor App SDK
 """
 
-from datetime import datetime
+from datetime import datetime, UTC
 
 from pydantic import BaseModel, ConfigDict
 
@@ -13,4 +13,4 @@ class AppInstallation(BaseModel):
     auth_token: str
     domain: str
     saleor_api_url: str
-    installed_at: datetime = datetime.utcnow()
+    installed_at: datetime = datetime.now(UTC)

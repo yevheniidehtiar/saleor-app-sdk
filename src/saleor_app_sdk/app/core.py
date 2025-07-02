@@ -4,15 +4,16 @@ Core Saleor App class
 
 import json
 import logging
+import os
 
 from fastapi import FastAPI, Request
 from fastapi.templating import Jinja2Templates
 
-from ..graphql.client import SaleorGraphQLClient
-from ..models.app_manifest import AppManifest
-from ..models.installation import AppInstallation
-from ..webhooks.events import WebhookEventType
-from ..webhooks.handler import WebhookHandler
+from saleor_app_sdk.graphql.client import SaleorGraphQLClient
+from saleor_app_sdk.models.app_manifest import AppManifest
+from saleor_app_sdk.models.installation import AppInstallation
+from saleor_app_sdk.webhooks.events import WebhookEventType
+from saleor_app_sdk.webhooks.handler import WebhookHandler
 
 logger = logging.getLogger(__name__)
 
@@ -49,13 +50,37 @@ class SaleorApp:
         async def register_installation(request: Request):
             body = await request.body()
             data = json.loads(body)
+            # Get auth_token from request data
+            auth_token = data["auth_token"]
+
+            # Get domain from request data as fallback
+            request_domain = data.get("domain") or os.environ.get("SALEOR_DOMAIN", "")
+
+            # Get saleor_api_url from environment variable
+            saleor_api_url = os.environ.get("SALEOR_API_URL", "")
+
+            # Extract domain from SALEOR_API_URL if available
+            domain = request_domain  # Default to request domain
+            if saleor_api_url:
+                try:
+                    # Remove protocol (http:// or https://)
+                    domain_part = saleor_api_url.split("//")[-1]
+                    # Remove path and get only domain
+                    extracted_domain = domain_part.split("/")[0]
+                    if extracted_domain:
+                        domain = extracted_domain
+                except (IndexError, ValueError) as e:
+                    # If extraction fails, use domain from request
+                    logger.warning("Failed to extract domain from API URL: %s", e)
+
+            # If saleor_api_url is not set, use default from domain
+            if not saleor_api_url:
+                saleor_api_url = f"https://{request_domain}/graphql/"
 
             installation = AppInstallation(
-                auth_token=data["auth_token"],
-                domain=data["domain"],
-                saleor_api_url=data.get(
-                    "saleor_api_url", f"https://{data['domain']}/graphql/"
-                ),
+                auth_token=auth_token,
+                domain=domain,
+                saleor_api_url=saleor_api_url,
             )
 
             self.installations[installation.domain] = installation

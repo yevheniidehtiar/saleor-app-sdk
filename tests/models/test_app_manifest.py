@@ -1,9 +1,5 @@
-import pytest
-
 from saleor_app_sdk.models.app_manifest import AppManifest
 from saleor_app_sdk.permissions import SaleorPermission
-from saleor_app_sdk.models.webhooks import WebhookDefinition
-from saleor_app_sdk.webhooks.events import WebhookEventType
 
 
 class TestAppManifest:
@@ -17,7 +13,7 @@ class TestAppManifest:
             permissions=[],
             app_url=app_url,
         )
-        
+
         assert manifest.id == app_id
         assert manifest.name == app_name
         assert manifest.version == app_version
@@ -32,10 +28,12 @@ class TestAppManifest:
         assert manifest.webhooks is None
         assert manifest.extensions is None
 
-    def test_init_with_permissions(self, app_id, app_name, app_version, app_about, app_url):
+    def test_init_with_permissions(
+        self, app_id, app_name, app_version, app_about, app_url
+    ):
         """Test initialization with permissions"""
         permissions = [SaleorPermission.MANAGE_ORDERS, SaleorPermission.MANAGE_PRODUCTS]
-        
+
         manifest = AppManifest(
             id=app_id,
             name=app_name,
@@ -44,7 +42,7 @@ class TestAppManifest:
             permissions=permissions,
             app_url=app_url,
         )
-        
+
         assert manifest.permissions == permissions
 
     def test_init_with_urls(self, app_id, app_name, app_version, app_about, app_url):
@@ -54,7 +52,7 @@ class TestAppManifest:
         privacy_url = "https://example.com/privacy"
         homepage_url = "https://example.com"
         support_url = "https://example.com/support"
-        
+
         manifest = AppManifest(
             id=app_id,
             name=app_name,
@@ -68,7 +66,7 @@ class TestAppManifest:
             homepage_url=homepage_url,
             support_url=support_url,
         )
-        
+
         assert manifest.app_url == app_url
         assert manifest.configuration_url == config_url
         assert manifest.token_target_url == token_url
@@ -76,10 +74,12 @@ class TestAppManifest:
         assert manifest.homepage_url == homepage_url
         assert manifest.support_url == support_url
 
-    def test_init_with_webhooks(self, app_id, app_name, app_version, app_about, app_url, webhook_definition):
+    def test_init_with_webhooks(
+        self, app_id, app_name, app_version, app_about, app_url, webhook_definition
+    ):
         """Test initialization with webhooks"""
         webhooks = [webhook_definition]
-        
+
         manifest = AppManifest(
             id=app_id,
             name=app_name,
@@ -89,10 +89,12 @@ class TestAppManifest:
             app_url=app_url,
             webhooks=webhooks,
         )
-        
+
         assert manifest.webhooks == webhooks
 
-    def test_init_with_extensions(self, app_id, app_name, app_version, app_about, app_url):
+    def test_init_with_extensions(
+        self, app_id, app_name, app_version, app_about, app_url
+    ):
         """Test initialization with extensions"""
         extensions = [
             {
@@ -103,7 +105,7 @@ class TestAppManifest:
                 "permissions": ["MANAGE_ORDERS"],
             }
         ]
-        
+
         manifest = AppManifest(
             id=app_id,
             name=app_name,
@@ -113,7 +115,7 @@ class TestAppManifest:
             app_url=app_url,
             extensions=extensions,
         )
-        
+
         assert manifest.extensions == extensions
 
     def test_equality(self, app_id, app_name, app_version, app_about, app_url):
@@ -126,7 +128,7 @@ class TestAppManifest:
             permissions=[],
             app_url=app_url,
         )
-        
+
         manifest2 = AppManifest(
             id=app_id,
             name=app_name,
@@ -135,9 +137,9 @@ class TestAppManifest:
             permissions=[],
             app_url=app_url,
         )
-        
+
         assert manifest1 == manifest2
-        
+
         # Test inequality
         manifest3 = AppManifest(
             id="different-id",
@@ -147,7 +149,7 @@ class TestAppManifest:
             permissions=[],
             app_url=app_url,
         )
-        
+
         assert manifest1 != manifest3
 
     def test_repr(self, app_id, app_name, app_version, app_about, app_url):
@@ -160,9 +162,9 @@ class TestAppManifest:
             permissions=[],
             app_url=app_url,
         )
-        
+
         repr_str = repr(manifest)
-        
+
         assert app_id in repr_str
         assert app_name in repr_str
         assert app_version in repr_str

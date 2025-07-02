@@ -1,6 +1,3 @@
-import pytest
-from gql import gql
-
 from saleor_app_sdk.graphql.queries import SaleorQueries
 
 
@@ -10,7 +7,7 @@ class TestSaleorQueries:
         query = SaleorQueries.APP_INFO
 
         # Verify it's a gql object (DocumentNode)
-        assert hasattr(query, 'loc')
+        assert hasattr(query, "loc")
 
         # We can't easily check the content of the query from the DocumentNode object
         # Just verify it's not None
@@ -21,7 +18,7 @@ class TestSaleorQueries:
         query = SaleorQueries.ORDERS_LIST
 
         # Verify it's a gql object (DocumentNode)
-        assert hasattr(query, 'loc')
+        assert hasattr(query, "loc")
 
         # We can't easily check the content of the query from the DocumentNode object
         # Just verify it's not None
@@ -32,7 +29,7 @@ class TestSaleorQueries:
         query = SaleorQueries.PRODUCT_LIST
 
         # Verify it's a gql object (DocumentNode)
-        assert hasattr(query, 'loc')
+        assert hasattr(query, "loc")
 
         # We can't easily check the content of the query from the DocumentNode object
         # Just verify it's not None
@@ -43,7 +40,9 @@ class TestSaleorQueries:
         from saleor_app_sdk.graphql.client import SaleorGraphQLClient
 
         # Create a client with the mock GQL client
-        client = SaleorGraphQLClient(api_url="https://example.com/graphql", auth_token="token")
+        client = SaleorGraphQLClient(
+            api_url="https://example.com/graphql", auth_token="token"
+        )
         client._client = mock_gql_client
 
         # Execute each query
@@ -51,16 +50,22 @@ class TestSaleorQueries:
 
         # APP_INFO query
         asyncio.run(client.execute(SaleorQueries.APP_INFO))
-        mock_gql_client.execute.assert_called_with(SaleorQueries.APP_INFO, variable_values={})
+        mock_gql_client.execute.assert_called_with(
+            SaleorQueries.APP_INFO, variable_values={}
+        )
         mock_gql_client.reset_mock()
 
         # ORDERS_LIST query with variables
         variables = {"first": 10, "after": None}
         asyncio.run(client.execute(SaleorQueries.ORDERS_LIST, variables))
-        mock_gql_client.execute.assert_called_with(SaleorQueries.ORDERS_LIST, variable_values=variables)
+        mock_gql_client.execute.assert_called_with(
+            SaleorQueries.ORDERS_LIST, variable_values=variables
+        )
         mock_gql_client.reset_mock()
 
         # PRODUCT_LIST query with variables
         variables = {"first": 10, "after": None}
         asyncio.run(client.execute(SaleorQueries.PRODUCT_LIST, variables))
-        mock_gql_client.execute.assert_called_with(SaleorQueries.PRODUCT_LIST, variable_values=variables)
+        mock_gql_client.execute.assert_called_with(
+            SaleorQueries.PRODUCT_LIST, variable_values=variables
+        )

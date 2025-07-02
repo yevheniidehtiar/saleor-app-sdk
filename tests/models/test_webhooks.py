@@ -1,11 +1,11 @@
-import pytest
-
 from saleor_app_sdk.models.webhooks import WebhookDefinition
 from saleor_app_sdk.webhooks.events import WebhookEventType
 
 
 class TestWebhookDefinition:
-    def test_init_minimal(self, webhook_name, webhook_events, webhook_query, webhook_target_url):
+    def test_init_minimal(
+        self, webhook_name, webhook_events, webhook_query, webhook_target_url
+    ):
         """Test initialization with minimal required fields"""
         webhook = WebhookDefinition(
             name=webhook_name,
@@ -20,7 +20,9 @@ class TestWebhookDefinition:
         assert webhook.target_url == webhook_target_url
         assert webhook.is_active is True  # Default value
 
-    def test_init_with_is_active(self, webhook_name, webhook_events, webhook_query, webhook_target_url):
+    def test_init_with_is_active(
+        self, webhook_name, webhook_events, webhook_query, webhook_target_url
+    ):
         """Test initialization with is_active parameter"""
         webhook = WebhookDefinition(
             name=webhook_name,
@@ -36,7 +38,9 @@ class TestWebhookDefinition:
         assert webhook.target_url == webhook_target_url
         assert webhook.is_active is False
 
-    def test_init_with_single_event(self, webhook_name, webhook_query, webhook_target_url):
+    def test_init_with_single_event(
+        self, webhook_name, webhook_query, webhook_target_url
+    ):
         """Test initialization with a single event"""
         event = WebhookEventType.ORDER_CREATED
 
@@ -49,7 +53,9 @@ class TestWebhookDefinition:
 
         assert webhook.events == [event]
 
-    def test_init_with_multiple_events(self, webhook_name, webhook_query, webhook_target_url):
+    def test_init_with_multiple_events(
+        self, webhook_name, webhook_query, webhook_target_url
+    ):
         """Test initialization with multiple events"""
         events = [
             WebhookEventType.ORDER_CREATED,
@@ -66,7 +72,9 @@ class TestWebhookDefinition:
 
         assert webhook.events == events
 
-    def test_equality(self, webhook_name, webhook_events, webhook_query, webhook_target_url):
+    def test_equality(
+        self, webhook_name, webhook_events, webhook_query, webhook_target_url
+    ):
         """Test equality comparison"""
         webhook1 = WebhookDefinition(
             name=webhook_name,
@@ -94,7 +102,9 @@ class TestWebhookDefinition:
 
         assert webhook1 != webhook3
 
-    def test_repr(self, webhook_name, webhook_events, webhook_query, webhook_target_url):
+    def test_repr(
+        self, webhook_name, webhook_events, webhook_query, webhook_target_url
+    ):
         """Test string representation"""
         webhook = WebhookDefinition(
             name=webhook_name,
@@ -111,7 +121,9 @@ class TestWebhookDefinition:
         assert "query=" in repr_str
         assert "is_active=True" in repr_str
 
-    def test_immutability(self, webhook_name, webhook_events, webhook_query, webhook_target_url):
+    def test_immutability(
+        self, webhook_name, webhook_events, webhook_query, webhook_target_url
+    ):
         """Test that webhook attributes can be accessed but not modified"""
         webhook = WebhookDefinition(
             name=webhook_name,

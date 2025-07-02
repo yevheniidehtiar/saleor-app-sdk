@@ -1,10 +1,9 @@
 import os
 import sys
-import pytest
-from pathlib import Path
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 
 import click
+import pytest
 from click.testing import CliRunner
 
 from saleor_app_sdk.cli import cli, create, version
@@ -55,7 +54,7 @@ class TestCli:
             assert os.path.exists(f"test-app/src/{app_module_name}/main.py")
 
             # Check content of main.py
-            with open(f"test-app/src/{app_module_name}/main.py", "r") as f:
+            with open(f"test-app/src/{app_module_name}/main.py") as f:
                 content = f.read()
                 assert "SaleorAppBuilder" in content
                 assert "test-app" in content
@@ -76,7 +75,9 @@ class TestCli:
             # Create a custom directory
             os.makedirs("custom-dir")
 
-            result = self.runner.invoke(create, ["test-app", "--directory", "custom-dir"])
+            result = self.runner.invoke(
+                create, ["test-app", "--directory", "custom-dir"]
+            )
 
             assert result.exit_code == 0
             assert "Creating new Saleor app: test-app" in result.output
@@ -119,5 +120,6 @@ class TestCli:
                 # Import __main__ to trigger the main function
                 with patch.dict(sys.modules, {"__main__.__spec__": None}):
                     from saleor_app_sdk.cli import __name__
+
                     if __name__ == "__main__":
                         mock_cli.assert_called_once()

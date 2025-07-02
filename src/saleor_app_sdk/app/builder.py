@@ -2,11 +2,11 @@
 Builder pattern for creating Saleor apps
 """
 
-from ..models.app_manifest import AppManifest
-from ..models.webhooks import WebhookDefinition
-from ..permissions import SaleorPermission
-from ..webhooks.events import WebhookEventType
-from .core import SaleorApp
+from saleor_app_sdk.app.core import SaleorApp
+from saleor_app_sdk.models.app_manifest import AppManifest
+from saleor_app_sdk.models.webhooks import WebhookDefinition
+from saleor_app_sdk.permissions import SaleorPermission
+from saleor_app_sdk.webhooks.events import WebhookEventType
 
 
 class SaleorAppBuilder:

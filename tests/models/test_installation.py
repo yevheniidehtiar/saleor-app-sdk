@@ -1,5 +1,6 @@
+from datetime import datetime
+
 import pytest
-from datetime import datetime, timedelta
 from pydantic import ValidationError
 
 from saleor_app_sdk.models.installation import AppInstallation
