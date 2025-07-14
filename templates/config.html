@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}Configuration - Saleor App{% endblock %}
+
+{% block content %}
+<div class="bg-white p-6 rounded-lg shadow-md">
+    <h2 class="text-2xl font-bold mb-6">App Configuration</h2>
+    
+    <p class="mb-6">Configure your Saleor app settings and preferences.</p>
+    
+    <!-- App Configuration Form with HTMX -->
+    <form hx-post="/api/config/update" 
+          hx-trigger="submit" 
+          hx-target="#config-result" 
+          hx-indicator="#config-indicator"
+          class="space-y-6">
+        
+        <div>
+            <h3 class="text-lg font-semibold mb-3">General Settings</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label for="app_name" class="block text-sm font-medium text-gray-700">App Name</label>
+                    <input type="text" 
+                           id="app_name" 
+                           name="app_name" 
+                           value="Saleor App"
+                           class="mt-1 block w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label for="app_version" class="block text-sm font-medium text-gray-700">App Version</label>
+                    <input type="text" 
+                           id="app_version" 
+                           name="app_version" 
+                           value="0.1.0"
+                           disabled
+                           class="mt-1 block w-full p-2 border rounded-md bg-gray-100 text-gray-500">
+                </div>
+            </div>
+        </div>
+        
+        <div>
+            <h3 class="text-lg font-semibold mb-3">Webhook Settings</h3>
+            <div class="space-y-2">
+                <div class="flex items-center">
+                    <input type="checkbox" 
+                           id="order_created" 
+                           name="webhooks" 
+                           value="ORDER_CREATED"
+                           checked
+                           class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                    <label for="order_created" class="ml-2 block text-sm text-gray-700">Order Created</label>
+                </div>
+                <div class="flex items-center">
+                    <input type="checkbox" 
+                           id="product_created" 
+                           name="webhooks" 
+                           value="PRODUCT_CREATED"
+                           checked
+                           class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                    <label for="product_created" class="ml-2 block text-sm text-gray-700">Product Created</label>
+                </div>
+                <div class="flex items-center">
+                    <input type="checkbox" 
+                           id="product_updated" 
+                           name="webhooks" 
+                           value="PRODUCT_UPDATED"
+                           checked
+                           class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                    <label for="product_updated" class="ml-2 block text-sm text-gray-700">Product Updated</label>
+                </div>
+            </div>
+        </div>
+        
+        <div>
+            <h3 class="text-lg font-semibold mb-3">API Settings</h3>
+            <div class="space-y-4">
+                <div>
+                    <label for="api_url" class="block text-sm font-medium text-gray-700">Saleor API URL</label>
+                    <input type="text" 
+                           id="api_url" 
+                           name="api_url" 
+                           placeholder="https://yourdomain.saleor.cloud/graphql/"
+                           class="mt-1 block w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label for="secret_key" class="block text-sm font-medium text-gray-700">Secret Key</label>
+                    <input type="password" 
+                           id="secret_key" 
+                           name="secret_key" 
+                           placeholder="••••••••••••••••"
+                           class="mt-1 block w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+            </div>
+        </div>
+        
+        <div>
+            <button type="submit" 
+                    class="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
+                Save Configuration
+            </button>
+        </div>
+    </form>
+    
+    <div id="config-indicator" class="htmx-indicator mt-4 text-gray-600">
+        Saving configuration...
+    </div>
+    <div id="config-result" class="mt-4">
+        <!-- Configuration update result will be loaded here -->
+    </div>
+</div>
+{% endblock %}

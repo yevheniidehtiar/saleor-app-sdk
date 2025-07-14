@@ -1,0 +1,154 @@
+# {{ app_display_name }}
+
+{{ app_description }}
+
+## Features
+
+- Built with [Saleor App SDK for Python](https://github.com/saleor/saleor-app-sdk-python)
+- FastAPI-based web framework
+- Ready for Saleor integration
+- {% if include_docker %}Docker support for easy deployment{% endif %}
+- {% if include_tests %}Test configuration included{% endif %}
+
+## Requirements
+
+- Python {{ python_version }}+
+- Saleor instance (for integration)
+
+## Installation
+
+1. Clone this repository:
+   ```bash
+   git clone <your-repository-url>
+   cd {{ app_name }}
+   ```
+
+2. Install dependencies:
+   ```bash
+   pip install -e .
+   ```
+
+{% if include_tests %}
+3. Install development dependencies (optional):
+   ```bash
+   pip install -e ".[dev]"
+   ```
+{% endif %}
+
+## Configuration
+
+1. Copy the environment file and configure your settings:
+   ```bash
+   cp .env.example .env
+   ```
+
+2. Edit `.env` file with your configuration:
+   ```
+   SECRET_KEY=your-secret-key-here
+   SALEOR_API_URL=https://your-saleor-instance.com/graphql/
+   APP_URL={{ app_url }}
+   ```
+
+## Development
+
+### Running the app locally
+
+```bash
+uvicorn src.{{ package_name }}.main:app --reload
+```
+
+The app will be available at `http://localhost:8000`
+
+{% if include_docker %}
+### Running with Docker
+
+1. Build and run with Docker Compose:
+   ```bash
+   docker-compose up --build
+   ```
+
+2. The app will be available at `http://localhost:8000`
+{% endif %}
+
+{% if include_tests %}
+### Running tests
+
+```bash
+pytest
+```
+
+### Running tests with coverage
+
+```bash
+pytest --cov=src --cov-report=html
+```
+{% endif %}
+
+### Code quality
+
+This project uses several tools to maintain code quality:
+
+- **Ruff**: For linting and formatting
+- **MyPy**: For type checking
+
+Run quality checks:
+```bash
+ruff check .
+ruff format .
+mypy src
+```
+
+## Saleor Integration
+
+### Permissions
+
+This app requires the following Saleor permissions:
+{% set permissions_list = saleor_permissions.split(',') %}
+{% for permission in permissions_list %}
+- `{{ permission.strip() }}`
+{% endfor %}
+
+### Installation in Saleor
+
+1. In your Saleor dashboard, go to Apps → Third-party apps
+2. Click "Install app" and provide your app's manifest URL:
+   ```
+   {{ app_url }}/api/manifest
+   ```
+3. Follow the installation process
+
+## Project Structure
+
+```
+{{ app_name }}/
+├── src/
+│   └── {{ package_name }}/
+│       ├── __init__.py
+│       └── main.py          # Main application file
+{% if include_tests %}├── tests/                   # Test files{% endif %}
+├── {% if include_docker %}docker-compose.yml       # Docker Compose configuration
+├── Dockerfile              # Docker configuration
+├── {% endif %}pyproject.toml           # Project configuration
+├── README.md               # This file
+├── .env.example            # Environment variables example
+└── .gitignore              # Git ignore rules
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Run tests and quality checks
+5. Submit a pull request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Support
+
+For support and questions:
+- Check the [Saleor App SDK documentation](https://github.com/saleor/saleor-app-sdk-python)
+- Open an issue in this repository
+- Contact: {{ author_email }}

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Saleor App{% endblock %}
+
+{% block content %}
+<div class="bg-white p-6 rounded-lg shadow-md">
+    <h2 class="text-2xl font-bold mb-6">Welcome to Saleor App</h2>
+    
+    <p class="mb-4">This is a sample Saleor app built with the Saleor App SDK for Python.</p>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+        <div class="bg-purple-50 p-6 rounded-lg border border-purple-100">
+            <h3 class="text-xl font-semibold mb-3 text-purple-700">Product Management</h3>
+            <p class="text-gray-600 mb-4">Search, view, and create products in your Saleor store.</p>
+            <a href="/products" class="inline-block bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 transition">
+                Manage Products
+            </a>
+        </div>
+        
+        <div class="bg-blue-50 p-6 rounded-lg border border-blue-100">
+            <h3 class="text-xl font-semibold mb-3 text-blue-700">Configuration</h3>
+            <p class="text-gray-600 mb-4">Configure your app settings and preferences.</p>
+            <a href="/config" class="inline-block bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
+                App Configuration
+            </a>
+        </div>
+    </div>
+    
+    <div class="mt-8 p-4 bg-gray-50 rounded-lg border border-gray-200">
+        <h3 class="text-lg font-semibold mb-2">About HTMX</h3>
+        <p class="text-gray-600 mb-2">
+            This app demonstrates how to use HTMX with FastAPI to create interactive web applications without complex frontend builds.
+        </p>
+        <p class="text-gray-600">
+            HTMX allows you to access modern browser features directly from HTML, rather than using JavaScript.
+            Learn more at <a href="https://htmx.org" target="_blank" class="text-blue-600 hover:underline">htmx.org</a>.
+        </p>
+    </div>
+</div>
+{% endblock %}

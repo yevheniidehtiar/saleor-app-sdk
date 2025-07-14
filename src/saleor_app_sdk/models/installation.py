@@ -2,7 +2,7 @@
 App installation model for Saleor App SDK
 """
 
-from datetime import datetime, UTC
+from datetime import UTC, datetime
 
 from pydantic import BaseModel, ConfigDict
 
